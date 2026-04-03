@@ -249,18 +249,25 @@
     }
 
     .frame-wrap {
-      width: 100%;
-      height: 520px;
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: #ffffff;
+        width: 100%;
+        border-radius: var(--radius);
+        overflow: hidden;
+        background: #ffffff;  
     }
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
+    .frame-wrap iframe {
+        width: 100%;
+        height: 520px;
+        border: 0;
+        display: block;
+    }
+
+    figcaption {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        color: var(--muted);
+        text-align: center;
+        background: rgba(255,255,255,0.04);
     }
 
     .image-wrap {
@@ -338,6 +345,21 @@
         padding: 22px;
       }
     }
+    figure {
+        margin: 0;
+      }
+
+      figcaption {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+        color: var(--muted);
+        text-align: center;
+        background: rgba(255,255,255,0.04);
+      }
+
+      .frame-wrap {
+        overflow: visible; /* importante para que se vea el caption */
+      }
   </style>
 </head>
 <body>
@@ -356,14 +378,12 @@
   <header class="hero">
     <div class="container hero-grid">
       <div>
-        <span class="eyebrow">Social Data Analysis Project</span>
+        <span class="eyebrow">Social Data Analysis Assignment 2</span>
         <h1>San Francisco crime data, explored as a connected visual story</h1>
         <p>
-          This page is organized as a short narrative rather than a gallery. The goal is to move from a broad temporal comparison, to the spatial concentration of incidents, and finally to the daily rhythm of crime across the city.
+          The objective of this page is visualizing how crime in San Francisco changes across time and space. The three visualizations are not meant to be standalone outputs, but rather complementary pieces of a single narrative that unfolds as the reader scrolls down the page.
         </p>
-        <p>
-          Instead of separating each visualization as an isolated output, the three sections below are meant to complement one another and support a single story about how crime varies across time and place in San Francisco.
-        </p>
+        
         <div class="hero-actions">
           <a class="btn btn-primary" href="#introduction">Read the story</a>
           <a class="btn btn-secondary" href="https://github.com/saandoo9/saandoo9.github.io" target="_blank" rel="noopener noreferrer">View repository</a>
@@ -373,10 +393,10 @@
       <div class="hero-card">
         <h3>Structure of the page</h3>
         <ul>
-          <li>Introduction without a figure</li>
-          <li>Static comparison of crime change over time</li>
-          <li>District-level spatial map</li>
-          <li>Interactive temporal exploration</li>
+          <li>Introduction to the data</li>
+          <li>Spatial distribution of crime</li>
+          <li>Patterns change with time</li>
+          <li>Interactive exploration</li>
         </ul>
       </div>
     </div>
@@ -389,8 +409,13 @@
         <p>
           Crime data can be read from many angles, but the most informative patterns often appear when temporal and spatial perspectives are combined. A citywide trend may suggest that crime changes over time, yet that aggregate view can hide strong local differences between districts. In the same way, a spatial hotspot may look stable until the daily timing of incidents is examined more closely.
         </p>
+
         <p>
-          The three sections below therefore follow a simple logic. First, the static figure compares how crime profiles differ between two periods. Second, the map shows that crime is not evenly distributed across San Francisco. Third, the interactive plot adds a finer temporal layer, showing that the timing of incidents also matters when interpreting urban crime patterns.
+          The dataset used for this project merges the Police_Department_Incident_Reports__2018_to_Present_20260203 and the Police_Department_Incident_Reports__Historical_2003_to_May_2018_20260210 datasets available on the San Francisco Open Data portal. From all the original crime categories, only twelve were selected for this project based on the estability of the merge considering the different reporting standards across the two datasets. The final dataset contains 12 categories of crime, 10 districts, and a time range from 2003 to early 2026. The three visualizations on this page use the same dataset but focus on different aspects of it, showing how the story changes when different angles are combined. 
+        </p>
+
+        <p>
+          The three sections below therefore follow a simple logic. First, the map shows how the crime is distributed across districts. Second, the temporal analysis reveals how these patterns evolve over time. Third, the interactive plot adds a finer temporal layer, showing that the timing of incidents also matters when interpreting urban crime patterns.
         </p>
       </div>
     </section>
@@ -398,21 +423,24 @@
     <section id="section-1">
       <div class="story-grid">
         <div class="story-text">
-          <h3>1. Change in crime composition over time</h3>
+          <h3>1. Spatial distribution of crime</h3>
           <p>
-            The first figure provides a broad entry point into the dataset by comparing crime patterns across two different periods. Rather than focusing on a single category, it highlights how the overall composition of incidents changes over time. This makes it easier to identify whether the city remains stable or whether certain forms of crime become relatively more or less prominent.
+
           </p>
           <p>
             As an opening plot, this figure establishes the central idea that crime is dynamic rather than fixed. It also motivates the next question: if citywide crime changes, does that shift happen uniformly across all areas, or are some districts carrying a disproportionate share of the change?
           </p>
           <div class="meta-links">
-            <a class="pill-link" href="images/yearly_crime_trends.png" target="_blank" rel="noopener noreferrer">Open image</a>
+            <a class="pill-link" href="visualizations/district_relative_risk_map.html" target="_blank" rel="noopener noreferrer">Open image</a>
           </div>
         </div>
         <div class="story-visual">
-          <div class="image-wrap">
-            <img src="images/yearly_crime_trends.png" alt="Static comparison of crime change over time" />
-          </div>
+          <figure class="frame-wrap">
+            <iframe src="visualizations/district_relative_risk_map.html"></iframe>
+            <figcaption>
+              Figure 1. Spatial distribution of crime across San Francisco districts.
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -428,15 +456,13 @@
             Spatial concentration is important because aggregate trends can be misleading when different districts behave in very different ways. A district with a high share of incidents may reflect commercial activity, population density, or other structural features, but in all cases the map helps ground the temporal story in a more concrete urban context.
           </p>
           <div class="meta-links">
-            <a class="pill-link" href="visualizations/sf_crime_heatmap.html" target="_blank" rel="noopener noreferrer">Open full page</a>
+            <a class="pill-link" href="visualizations/district_relative_risk_map.html" target="_blank" rel="noopener noreferrer">Open full page</a>
           </div>
         </div>
         <div class="story-visual">
-          <div class="frame-wrap">
-            <iframe
-              src="visualizations/sf_crime_heatmap.html"
-              title="San Francisco crime heatmap">
-            </iframe>
+          <div class="image-wrap">
+            <img src="images/yearly_crime_trends.png" alt="Static comparison of crime change over time" />
+            
           </div>
         </div>
       </div>

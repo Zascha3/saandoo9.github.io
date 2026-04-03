@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>San Francisco Crime Visualizations</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #121935;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.14);
+      --text: #f5f7ff;
+      --muted: #b7bfdc;
+      --accent: #7aa2ff;
+      --accent-2: #67e8f9;
+      --shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
+      --radius: 22px;
+      --max-width: 1200px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(122, 162, 255, 0.22), transparent 28%),
+        radial-gradient(circle at top right, rgba(103, 232, 249, 0.16), transparent 22%),
+        linear-gradient(180deg, #0b1020 0%, #0f1530 100%);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(92%, var(--max-width));
+      margin: 0 auto;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 16, 32, 0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+    }
+
+    .brand {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      transition: 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 84px 0 42px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      color: var(--accent-2);
+      background: rgba(255,255,255,0.04);
+      margin-bottom: 18px;
+      font-size: 0.9rem;
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 5vw, 4.6rem);
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 700px;
+      font-size: 1.05rem;
+      margin-bottom: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-weight: 700;
+      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #08101f;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text);
+    }
+
+    .hero-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    .hero-card h3 {
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+    }
+
+    .hero-card ul {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-card li {
+      color: var(--muted);
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    section {
+      padding: 34px 0 54px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .intro-box {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .intro-box p {
+      color: var(--muted);
+      margin-bottom: 16px;
+      max-width: 900px;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .story-grid.reverse .story-text {
+      order: 2;
+    }
+
+    .story-grid.reverse .story-visual {
+      order: 1;
+    }
+
+    .story-text,
+    .story-visual {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .story-text {
+      padding: 28px;
+    }
+
+    .story-text h3 {
+      font-size: 1.45rem;
+      margin-bottom: 12px;
+    }
+
+    .story-text p {
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .story-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .story-visual {
+      overflow: hidden;
+      background: rgba(255,255,255,0.96);
+    }
+
+    .frame-wrap {
+      width: 100%;
+      height: 520px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .image-wrap {
+      padding: 20px;
+      background: transparent;
+    }
+
+    .image-wrap img {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #fff;
+    }
+
+    .meta-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .pill-link {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .pill-link:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    footer {
+      padding: 24px 0 48px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .story-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .story-grid.reverse .story-text,
+      .story-grid.reverse .story-visual {
+        order: initial;
+      }
+
+      .frame-wrap {
+        height: 440px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .nav-inner {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .frame-wrap {
+        height: 340px;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .intro-box,
+      .story-text {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="brand">SF Crime Visualizations</div>
+      <div class="nav-links">
+        <a href="#introduction">Introduction</a>
+        <a href="#section-1">Section 1</a>
+        <a href="#section-2">Section 2</a>
+        <a href="#section-3">Section 3</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">Social Data Analysis Project</span>
+        <h1>San Francisco crime data, explored as a connected visual story</h1>
+        <p>
+          This page is organized as a short narrative rather than a gallery. The goal is to move from a broad temporal comparison, to the spatial concentration of incidents, and finally to the daily rhythm of crime across the city.
+        </p>
+        <p>
+          Instead of separating each visualization as an isolated output, the three sections below are meant to complement one another and support a single story about how crime varies across time and place in San Francisco.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#introduction">Read the story</a>
+          <a class="btn btn-secondary" href="https://github.com/saandoo9/saandoo9.github.io" target="_blank" rel="noopener noreferrer">View repository</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <h3>Structure of the page</h3>
+        <ul>
+          <li>Introduction without a figure</li>
+          <li>Static comparison of crime change over time</li>
+          <li>District-level spatial map</li>
+          <li>Interactive temporal exploration</li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="introduction">
+      <div class="intro-box">
+        <h2 class="section-title">Introduction</h2>
+        <p>
+          Crime data can be read from many angles, but the most informative patterns often appear when temporal and spatial perspectives are combined. A citywide trend may suggest that crime changes over time, yet that aggregate view can hide strong local differences between districts. In the same way, a spatial hotspot may look stable until the daily timing of incidents is examined more closely.
+        </p>
+        <p>
+          The three sections below therefore follow a simple logic. First, the static figure compares how crime profiles differ between two periods. Second, the map shows that crime is not evenly distributed across San Francisco. Third, the interactive plot adds a finer temporal layer, showing that the timing of incidents also matters when interpreting urban crime patterns.
+        </p>
+      </div>
+    </section>
+
+    <section id="section-1">
+      <div class="story-grid">
+        <div class="story-text">
+          <h3>1. Change in crime composition over time</h3>
+          <p>
+            The first figure provides a broad entry point into the dataset by comparing crime patterns across two different periods. Rather than focusing on a single category, it highlights how the overall composition of incidents changes over time. This makes it easier to identify whether the city remains stable or whether certain forms of crime become relatively more or less prominent.
+          </p>
+          <p>
+            As an opening plot, this figure establishes the central idea that crime is dynamic rather than fixed. It also motivates the next question: if citywide crime changes, does that shift happen uniformly across all areas, or are some districts carrying a disproportionate share of the change?
+          </p>
+          <div class="meta-links">
+            <a class="pill-link" href="images/yearly_crime_trends.png" target="_blank" rel="noopener noreferrer">Open image</a>
+          </div>
+        </div>
+        <div class="story-visual">
+          <div class="image-wrap">
+            <img src="images/yearly_crime_trends.png" alt="Static comparison of crime change over time" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-2">
+      <div class="story-grid reverse">
+        <div class="story-text">
+          <h3>2. Spatial concentration across districts</h3>
+          <p>
+            Once the temporal change has been established, the natural next step is to ask where crime is concentrated. The map addresses that question by showing how incidents are distributed across San Francisco districts. This adds a spatial dimension to the narrative and helps reveal whether crime is spread relatively evenly or clustered in specific parts of the city.
+          </p>
+          <p>
+            Spatial concentration is important because aggregate trends can be misleading when different districts behave in very different ways. A district with a high share of incidents may reflect commercial activity, population density, or other structural features, but in all cases the map helps ground the temporal story in a more concrete urban context.
+          </p>
+          <div class="meta-links">
+            <a class="pill-link" href="visualizations/sf_crime_heatmap.html" target="_blank" rel="noopener noreferrer">Open full page</a>
+          </div>
+        </div>
+        <div class="story-visual">
+          <div class="frame-wrap">
+            <iframe
+              src="visualizations/sf_crime_heatmap.html"
+              title="San Francisco crime heatmap">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-3">
+      <div class="story-grid">
+        <div class="story-text">
+          <h3>3. Daily timing of incidents</h3>
+          <p>
+            The final section moves from long-term change and spatial concentration to the shorter temporal rhythm of the city. The interactive hourly chart shows that crime is not only uneven across districts, but also uneven across the hours of the day. Some categories peak during daytime activity, while others become more visible in the evening or at night.
+          </p>
+          <p>
+            This last visualization completes the story by showing that urban crime must be interpreted at multiple scales. The city changes over years, differs across districts, and also follows recurring daily patterns. Together, the three figures provide a more coherent understanding than any single plot could offer on its own.
+          </p>
+          <div class="meta-links">
+            <a class="pill-link" href="visualizations/crime_hourly_interactive.html" target="_blank" rel="noopener noreferrer">Open full page</a>
+          </div>
+        </div>
+        <div class="story-visual">
+          <div class="frame-wrap">
+            <iframe
+              src="visualizations/crime_hourly_interactive.html"
+              title="Crime hourly interactive visualization">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      Built with GitHub Pages · Project by saandoo9
+    </div>
+  </footer>
+</body>
+</html>

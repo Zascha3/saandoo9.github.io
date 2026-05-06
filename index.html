@@ -382,7 +382,7 @@
     </section>
 
     <section id="section-2" class="section">
-      <div class="story-block reverse">
+      <div style="display:block;">
         <article class="text-panel">
           <div class="section-number">Section 2</div>
           <h2>Club home advantage VS country</h2>
@@ -397,12 +397,20 @@
           </div>
         </article>
 
-        <figure class="plot-panel">
+        <figure class="plot-panel" style="width:100%;">
           <div class="plot-header">
             <span>Plot 2</span>
             <a href="visualizations/club_home_advantage_map.html" target="_blank">Open full page</a>
           </div>
-          <iframe src="visualizations/club_home_advantage_map.html" title="Second visualization"></iframe>
+          <iframe 
+              src="visualizations/club_home_advantage_map.html"
+              title="Second visualization"
+              style="
+                  width:100%;
+                  height:760px;
+                  border:none;
+              ">
+          </iframe>
         </figure>
       </div>
     </section>
